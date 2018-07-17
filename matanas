@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+import time
+t=time.time()
+data = pd.read_csv('...',sep=';')
+rows=len(data)-1
+columns=data.size/len(data)
+output=pd.DataFrame(np.zeros((columns,2)))
+for i in range(0,columns):
+    times1=0
+    times2=0
+    for j in range (0,rows):
+        if (times1 == rows and times2 == rows):
+            break
+        if (data.iloc[j,i]>13600 and times1<rows):
+            times1=times1+1
+        if j>5:
+            if (data.iloc[j-6:j,i].mean(axis=0)>13600 and times2<rows):
+                times2=times2+1
+        if times1==3:
+            output.iloc[i,0]=j
+            times1=rows
+        if times2==1:
+            output.iloc[i,1]=j
+            times2=rows
+output.to_csv('...',sep='|')
+print(time.time()-t)
